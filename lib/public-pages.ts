@@ -32,4 +32,4 @@ export const directoryAnswers = [
   },
 ] as const
 
-export const indexablePaths = ["/", "/about", "/directory", "/jobs", "/request", "/services", "/guides/request"] as const
+export const indexablePaths = ["/", "/about", "/directory", "/jobs", "/request", "/services", "/mowing", "/lawn-care", "/landscaping", "/guides/request"] as const

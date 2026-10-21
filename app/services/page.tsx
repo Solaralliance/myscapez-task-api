@@ -2,6 +2,8 @@ import { Crumbs } from "@/components/crumbs"
 import { trades } from "@/lib/seq-directory"
 import { workGroups } from "@/lib/work-catalog"
 
+const tradePaths = { mowing: "/mowing", care: "/lawn-care", landscaping: "/landscaping" } as const
+
 export default function ServicesPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#050605] text-[#f2f6ef]">
@@ -23,7 +25,7 @@ export default function ServicesPage() {
         <dl className="mt-6 flex flex-col gap-6">
           {trades.map((trade) => (
             <div key={trade.id}>
-              <dt className="text-lg font-semibold text-[#9cff12]">{trade.title}</dt>
+              <dt><a href={tradePaths[trade.id]} className="text-lg font-semibold text-[#9cff12]">{trade.title}</a></dt>
               <dd className="mt-2 leading-7 text-[#c5d0c2]">{trade.copy}</dd>
             </div>
           ))}

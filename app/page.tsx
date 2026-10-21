@@ -21,6 +21,7 @@ import {
   Send,
   Globe2,
 } from 'lucide-react'
+import { serviceCategories } from '@/lib/service-categories'
 
 const logoUrl = '/myscapez-logo-small.png'
 
@@ -34,13 +35,6 @@ const blogPosts = [
   { href: '/services', title: 'What each lawn service includes', category: 'Service definitions', copy: 'Lawn mowing, lawn care and landscaping, and the jobs a business can switch on.', image: lawnImages[0] },
   { href: '/guides/request', title: 'What to send with a quote request', category: 'Quote preparation', copy: 'The suburb, the job, the property and the lawn size. Photos are not uploaded.', image: lawnImages[1] },
   { href: '/services#weed-treatment', title: 'When weed treatment is not offered', category: 'Licences', copy: 'Chemical weed work stays off until the business holds the Queensland authorisation that job needs.', image: lawnImages[2] },
-]
-
-const services = [
-  { title: 'Lawn mowing', copy: 'A clean, even finish every time.', icon: '✂' },
-  { title: 'Edging & detail', copy: 'Crisp borders that frame your garden.', icon: '⌁' },
-  { title: 'Hedge trimming', copy: 'Keep hedges neat, healthy and shaped.', icon: '✦' },
-  { title: 'Yard clean-up', copy: 'From green waste to a fresh reset.', icon: '◒' },
 ]
 
 const websitePackages = [
@@ -57,7 +51,6 @@ const pros = [
 
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeService, setActiveService] = useState('Lawn mowing')
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
 
@@ -121,7 +114,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="services" className="border-y border-white/[0.07] bg-[#080b08] px-5 py-20 lg:px-10"><div className="mx-auto max-w-7xl"><div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="eyebrow">Good people. Great lawns. Less fuss.</p><h2 className="section-heading mt-3">Need Your Lawn Sorted? <span>Let&apos;s Get It Growing.</span></h2></div><div className="max-w-md"><p className="text-sm leading-6 text-[#879286]">From lawn mowing and lawn care to landscaping, MyScapez helps you connect with local professionals to get your outdoor space looking its best.</p><p className="mt-3 text-sm leading-6 text-[#879286]">Tell us what you need, and we&apos;ll help take care of the rest — making it easier to find local help, organise bookings and get your yard sorted without the hassle.</p><a href="#directory" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#9cff12]">Find a Local Pro <ArrowRight aria-hidden="true" /></a></div></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{services.map((service) => <button key={service.title} onClick={() => setActiveService(service.title)} className={`shine-card text-left ${activeService === service.title ? 'active-card' : ''}`}><div className="mb-10 flex items-start justify-between"><span className="text-3xl text-[#9cff12]">{service.icon}</span><ArrowRight className="text-[#61705f] transition group-hover:text-[#9cff12]" aria-hidden="true" /></div><h3 className="text-lg font-semibold">{service.title}</h3><p className="mt-2 text-sm leading-6 text-[#869184]">{service.copy}</p></button>)}</div></div></section>
+      <section id="services" className="border-y border-white/[0.07] bg-[#080b08] px-5 py-20 lg:px-10"><div className="mx-auto max-w-7xl"><div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="eyebrow">Good people. Great lawns. Less fuss.</p><h2 className="section-heading mt-3">Need Your Lawn Sorted? <span>Let&apos;s Get It Growing.</span></h2></div><div className="max-w-md"><p className="text-sm leading-6 text-[#879286]">From lawn mowing and lawn care to landscaping, MyScapez helps you connect with local professionals to get your outdoor space looking its best.</p><p className="mt-3 text-sm leading-6 text-[#879286]">Tell us what you need, and we&apos;ll help take care of the rest — making it easier to find local help, organise bookings and get your yard sorted without the hassle.</p><a href="#directory" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#9cff12]">Find a Local Pro <ArrowRight aria-hidden="true" /></a></div></div><div className="grid gap-4 lg:grid-cols-3">{serviceCategories.map((service) => <a key={service.path} href={service.path} className="shine-card flex flex-col overflow-hidden p-0"><img src={service.image.src} alt={service.image.alt} width={1200} height={800} loading="lazy" decoding="async" title={`${service.title} | MyScapez | Authored by Jai Butchers`} className="h-52 w-full object-cover" /><div className="flex flex-1 flex-col p-5"><h3 className="text-2xl font-semibold">{service.title}</h3><p className="mt-2 text-sm italic leading-6 text-[#9cff12]">{service.h1}</p><p className="mt-3 flex-1 text-sm leading-6 text-[#869184]">{service.lede}</p><p className="mt-6 inline-flex items-center gap-2 text-sm font-semibold">{service.cta} <ArrowRight aria-hidden="true" /></p></div></a>)}</div></div></section>
 
       <section id="how-it-works" className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28"><div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow">How it works</p><h2 className="section-heading mt-3">Your yard, <span>your way.</span></h2><p className="mt-6 max-w-md leading-7 text-[#879286]">We take care of the back-and-forth so you can spend more time enjoying the result.</p><a href="/request" className="glow-button mt-8 inline-flex items-center gap-3 rounded-full px-6 py-3 font-semibold text-[#081006]">Start a request <ArrowRight aria-hidden="true" /></a></div><div className="grid gap-4 sm:grid-cols-3">{[
                 ['01', 'Tell us what you need', 'Share your suburb, service, preferred time and a few photos.', '/how-it-works/step-1.jpg', 'A phone showing a MyScapez request for suburb, service, time and photos'],
