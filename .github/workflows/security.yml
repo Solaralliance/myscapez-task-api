@@ -1,0 +1,66 @@
+name: Security checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  audit:
+    name: Typecheck and critical advisories
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: 12.3.4
+
+      - name: Install Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit --incremental false
+
+      - name: Fail on critical advisories
+        run: pnpm audit --audit-level critical
+
+      - name: Refuse public secret names
+        run: |
+          if git grep -nE 'NEXT_PUBLIC_(DATABASE_URL|RESEND_API_KEY|SLACK_WEBHOOK_URL|SESSION_SECRET|TURNSTILE_SECRET_KEY)' -- '*.ts' '*.tsx' '*.js' '*.mjs'; then
+            echo "A server secret is marked public."
+            exit 1
+          fi
+
+      - name: Refuse unapproved destructive database changes
+        run: |
+          python3 - <<'PY'
+          import pathlib, sys
+          blocked = ("DROP DATABASE", "DROP SCHEMA", "TRUNCATE", "DELETE FROM")
+          problems = []
+          for path in pathlib.Path(".").rglob("*"):
+              if any(part in {".git", "node_modules", ".next"} for part in path.parts):
+                  continue
+              if not path.is_file():
+                  continue
+              if path.name == "package.json":
+                  text = path.read_text(errors="ignore")
+                  if "migrate reset" in text or "accept-data-loss" in text:
+                      problems.append(f"{path}: destructive database script")
+              if path.suffix.lower() == ".sql":
+                  text = path.read_text(errors="ignore")
+                  if any(item in text.upper() for item in blocked) and "-- approved-by:" not in text.lower():
+                      problems.append(f"{path}: destructive SQL needs -- approved-by:")
+          if problems:
+              print("\n".join(problems))
+              sys.exit(1)
+          print("no unapproved destructive database change")
+          PY
