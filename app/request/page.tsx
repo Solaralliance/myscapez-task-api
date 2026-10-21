@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { SuburbFinder } from "@/components/suburb-finder"
 import { TurnstileField } from "@/components/turnstile-field"
 import { allowEnquiry } from "@/lib/enquiry-limit"
@@ -19,6 +19,11 @@ function RequestPage() {
   const [sending, setSending] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState("")
   const [result, setResult] = useState<{ matches: BusinessProfile[]; score: number; bucket: string; reasons: string[] } | null>(null)
+
+  useEffect(() => {
+    const job = new URLSearchParams(window.location.search).get("job")
+    if (job && jobById(job)) setCategory(job)
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
